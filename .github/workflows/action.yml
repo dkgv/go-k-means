@@ -16,4 +16,12 @@ jobs:
           go-version: 1.18
 
       - name: Run tests
-        run: go test -v ./...
+        run: go test -v -coverprofile=profile.cov ./...
+
+      - name: Coveralls
+        env:
+          COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          GO111MODULE=off go get github.com/mattn/goveralls
+          $(go env GOPATH)/bin/goveralls -coverprofile=profile.cov -service=github
+
