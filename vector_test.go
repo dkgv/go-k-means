@@ -89,39 +89,3 @@ func TestPoint_Div(t *testing.T) {
 		})
 	}
 }
-
-func TestVector_Mul(t *testing.T) {
-	type args struct {
-		scalar float64
-	}
-	tests := []struct {
-		name string
-		v    Vector
-		args args
-		want Vector
-	}{
-		{
-			name: "multiply by 2 scalar",
-			v:    Vector{1, 2, 3},
-			args: args{
-				scalar: 2,
-			},
-			want: Vector{2, 4, 6},
-		},
-		{
-			name: "multiply by 0 scalar",
-			v:    Vector{1, 2, 3},
-			args: args{
-				scalar: 0,
-			},
-			want: Vector{0, 0, 0},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.v.Mul(tt.args.scalar); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Mul() = %v, wantK %v", got, tt.want)
-			}
-		})
-	}
-}
