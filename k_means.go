@@ -77,6 +77,7 @@ func New(opts ...Option) *KMeans {
 
 type Datum struct {
 	Vector  Vector
+	Payload any
 	cluster int
 }
 
