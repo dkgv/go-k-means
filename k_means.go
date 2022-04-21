@@ -131,18 +131,12 @@ func (m KMeans) Cluster(data []Datum, k int) [][]Datum {
 		}
 
 		// Reassign data to nearest centroid
-		changes := 0
 		for j := range data {
 			index := nearestDataToDatum(centroids, data[j])
 			prevIndex := data[j].cluster - 1
 			if prevIndex <= 0 || prevIndex != index {
 				data[j].cluster = index + 1
-				changes++
 			}
-		}
-
-		if changes == 0 {
-			break
 		}
 	}
 

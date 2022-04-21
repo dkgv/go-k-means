@@ -19,6 +19,7 @@ func (s RandomCentroidStrategy) Select(data []Datum, k int) []Datum {
 		}
 		visited[index] = true
 		centroids[i] = data[index]
+		data[i].cluster = i
 		i++
 	}
 	return centroids
@@ -33,7 +34,9 @@ func (s KMeansPlusPlusCentroidStrategy) Select(data []Datum, k int) []Datum {
 	rand.Seed(s.randomSeed)
 
 	centroids := make([]Datum, k)
-	centroids[0] = data[rand.Intn(len(data))]
+	initialIndex := rand.Intn(len(data))
+	centroids[0] = data[initialIndex]
+	data[initialIndex].cluster = 0
 
 	distances := make([]float64, len(data))
 	for i := 1; i < k; i++ {
@@ -55,6 +58,7 @@ func (s KMeansPlusPlusCentroidStrategy) Select(data []Datum, k int) []Datum {
 			j++
 		}
 		centroids[i] = data[j]
+		data[j].cluster = i
 	}
 	return centroids
 }

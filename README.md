@@ -17,6 +17,7 @@ func main() {
 	
     randomSeed := 0
     km := k_means.New(
+        k_means.WithMinIterations(1)
         k_means.WithMaxIterations(100),
         k_means.WithKMeansPlusPlusCentroidStrategy(randomSeed),
         // k_means.WithRandomCentroidStrategy(randomSeed),
