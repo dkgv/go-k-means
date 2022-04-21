@@ -5,11 +5,18 @@ import (
 )
 
 type Options struct {
+	minIterations    int
 	maxIterations    int
 	centroidStrategy CentroidStrategy
 }
 
 type Option func(*Options)
+
+func WithMinIterations(minIterations int) Option {
+	return func(options *Options) {
+		options.minIterations = minIterations
+	}
+}
 
 func WithMaxIterations(maxIterations int) Option {
 	return func(options *Options) {
@@ -51,6 +58,7 @@ type KMeans struct {
 
 func DefaultOptions() Options {
 	return Options{
+		minIterations: 1,
 		maxIterations: 100,
 		centroidStrategy: KMeansPlusPlusCentroidStrategy{
 			randomSeed: time.Now().UnixMilli(),
@@ -95,17 +103,15 @@ func (m KMeans) Cluster(data []Datum, k int) [][]Datum {
 	}
 
 	// Assign all unassigned data to nearest centroid
-	for i := 0; i < m.conf.maxIterations; i++ {
-		for _, datum := range data {
-			if datum.cluster != 0 {
-				continue
-			}
-			index := nearestDataToDatum(centroids, datum)
-			datum.cluster = index + 1
+	for _, datum := range data {
+		if datum.cluster != 0 {
+			continue
 		}
+		index := nearestDataToDatum(centroids, datum)
+		datum.cluster = index + 1
 	}
 
-	for i := 0; i < m.conf.maxIterations; i++ {
+	for i := 0; i < m.conf.minIterations || i < m.conf.maxIterations; i++ {
 		// Adjust centroids
 		clusterSizes := make([]int, k)
 		for j := range data {
@@ -113,6 +119,7 @@ func (m KMeans) Cluster(data []Datum, k int) [][]Datum {
 			if datum.cluster == 0 {
 				continue
 			}
+
 			centroid := centroids[datum.cluster-1].Vector
 			centroid = centroid.Add(datum.Vector)
 			clusterSizes[datum.cluster-1]++

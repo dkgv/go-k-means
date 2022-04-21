@@ -47,6 +47,7 @@ func TestKMeans_Cluster(t *testing.T) {
 			name: "kpp, 10 points 4 clusters",
 			conf: []Option{
 				WithKMeansPlusPlusCentroidStrategy(0),
+				WithMinIterations(1),
 				WithMaxIterations(1),
 			},
 			args: args{
